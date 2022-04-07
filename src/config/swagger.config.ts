@@ -40,7 +40,7 @@ export const swaggerConfig = {
   },
   apis: [
     `${path.join(__dirname, '../routes/*.ts')}`,
-    `${path.join(__dirname, '../components/user/*.ts')}`,
-    `${path.join(__dirname, '../components/auth/*.ts')}`,
+    `${path.join(__dirname, '../components/*/*.ts')}`,
+    `${path.join(__dirname, '../components/*/*.js')}`,
   ],
 };
