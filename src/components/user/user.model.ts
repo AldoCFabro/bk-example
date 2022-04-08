@@ -1,36 +1,27 @@
 import { Schema, model } from 'mongoose';
-
-const UserSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true,
+import { IUserDocument } from './user.interface';
+const UserSchema = new Schema(
+  {
+    userName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      index: true,
+    },
+    role: {
+      type: [''],
+    },
+    enabled: {
+      type: Boolean,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    index: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  rol: {
-    type: String,
-    required: true,
-  },
-  enabled: {
-    type: Boolean,
-    default: true,
-  },
-});
+  { timestamps: true },
+);
 
 UserSchema.methods.toJSON = function () {
-  const { __v, password, ...user } = this.toObject();
+  const { __v, ...user } = this.toObject();
 
   return user;
 };
-exports = model('Users', UserSchema);
+export default model<IUserDocument>('Users', UserSchema);

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import StatusCodes from 'http-status-codes';
 import logger from 'jet-logger';
-import { successResponse } from './../../network/response';
+import { successResponse } from '../../network/response';
 
 // Constants
 const router = Router();

@@ -1,19 +1,20 @@
 import { Types } from 'mongoose';
-export class User {
-  id: Types.ObjectId;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  enabled: boolean;
-  role: string[];
-  constructor(user: any) {
-    this.id = user.id || '';
-    this.firstName = user.firstName || '';
-    this.lastName = user.lastName || '';
-    this.userName = user.userName || '';
-    this.email = user.email || '';
-    this.enabled = user.enabled || true;
-    this.role = user.role || ['user'];
-  }
+export class UserDTO {
+  _id?: Types.ObjectId;
+  userName?: string;
+  email?: string;
+  enabled?: boolean;
+  role?: string[];
+  constructor() {}
+}
+
+export class UserCreateDTO {
+  _id?: Types.ObjectId;
+  userName?: string;
+  email?: string;
+  role?: string[];
+  password?: string;
+  confirmPassword?: string;
+  enabled?: boolean;
+  constructor() {}
 }

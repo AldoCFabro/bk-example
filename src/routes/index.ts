@@ -1,6 +1,6 @@
 import { Router } from 'express';
 //import { adminMw } from './middleware';
-import authRouter from '../components/auth/auth-router';
+import authRouter from '../components/auth/auth.router';
 import usersRouter from '../components/user/user.router';
 //import userRouter from './user-router';
 

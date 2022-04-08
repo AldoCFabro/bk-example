@@ -1,13 +1,35 @@
 import { Request, Response } from 'express';
 import { successResponse, errorResponse } from './../../network/response';
 import userService from './user.service';
+import StatusCodes from 'http-status-codes';
+
+async function create(req: Request, res: Response) {
+  try {
+    const data = req.body;
+    const userCreated = await userService.create(data);
+    successResponse(req, res, 'user created', StatusCodes.CREATED, { user: userCreated });
+  } catch (error: any) {
+    errorResponse(req, res, error);
+  }
+}
 
 async function list(req: Request, res: Response) {
   try {
-    const allUsers = await userService.list();
-    successResponse(req, res, 'get all users', 200, allUsers);
+    const limit = req.query.limit ? parseInt(req.query.limit.toString(), 10) : undefined;
+    const skip = req.query.skip ? parseInt(req.query.skip.toString(), 10) : undefined;
+    const sort = req.query.sort ? req.query.sort.toString() : undefined;
+
+    const users = await userService.list(limit, skip, sort);
+    if (users) {
+      const count = users.length;
+    }
+    const response = {
+      count: users.length,
+      users,
+    };
+    successResponse(req, res, 'get all users', StatusCodes.OK, response);
   } catch (error: any) {
-    errorResponse(req, res, error, 404);
+    errorResponse(req, res, 'internal server error', StatusCodes.INTERNAL_SERVER_ERROR, error);
   }
 }
 
@@ -18,16 +40,6 @@ async function getById(req: Request, res: Response) {
     successResponse(req, res, 'get one user', 200, user);
   } catch (error: any) {
     errorResponse(req, res, error, 404);
-  }
-}
-
-async function create(req: Request, res: Response) {
-  try {
-    const data = req.body;
-    const user = await userService.create(data);
-    successResponse(req, res, 'get one user', 200, user);
-  } catch (error: any) {
-    errorResponse(req, res, error);
   }
 }
 
