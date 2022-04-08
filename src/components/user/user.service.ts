@@ -36,7 +36,7 @@ const list = async (limit = 10, skip = 0, sort = '-1'): Promise<UserDTO[]> => {
       .find(query)
       .limit(limit)
       .skip(skip)
-      .sort({ userName: sort });
+      .sort({ createdAt: sort });
     return mapUsersDocumentToDTO(userDocument);
   } catch (error: any) {
     logger.err(`[user.service.list()] ->${error.message}`, true);
