@@ -1,4 +1,5 @@
-import express, { Application } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
+import path from 'path';
 import cors from 'cors';
 import morgan from 'morgan';
 import logger from 'jet-logger';
@@ -27,5 +28,18 @@ if (process.env.NODE_ENV === 'development') {
 app.use(prefix, BaseRouter);
 
 dbConnection();
+
+// Set views dir
+const viewsDir = path.join(__dirname, 'views');
+app.set('views', viewsDir);
+
+// Set static dir
+const staticDir = path.join(__dirname, 'public');
+app.use(express.static(staticDir));
+
+// Serve index.html file
+app.get('*', (_: Request, res: Response) => {
+  res.sendFile('index.html', { root: viewsDir });
+});
 
 export default app;
