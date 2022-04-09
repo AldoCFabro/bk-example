@@ -4,8 +4,7 @@ import { mapUsersDocumentToDTO, userCreateDTO, userDocumentToDTO } from './user.
 import authService from './../auth/auth.service';
 import { IUser, IUserCreate, IUserDocument } from './user.interface';
 import { UserDTO } from './user.dto';
-import mongoose, { FilterQuery, QueryOptions } from 'mongoose';
-import autService from './../auth/auth.service';
+import { FilterQuery, Types } from 'mongoose';
 
 const create = async (user: IUserCreate): Promise<UserDTO> => {
   logger.info(`[user.service.create()]`);
@@ -113,4 +112,13 @@ const getByEmail = async (email: string = ''): Promise<UserDTO | null> => {
   return user;
 };
 
-export default { list, create, update, remove };
+const getProfileUserById = async (_id: string): Promise<UserDTO | null> => {
+  let profile = null;
+  const userDocument = await userModel.findOne({ _id });
+  if (userDocument) {
+    profile = userDocumentToDTO(userDocument);
+  }
+  return profile;
+};
+
+export default { list, create, update, remove, getProfileUserById };

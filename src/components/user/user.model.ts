@@ -10,7 +10,7 @@ const UserSchema = new Schema(
       index: true,
     },
     role: {
-      type: [''],
+      type: String,
     },
     enabled: {
       type: Boolean,

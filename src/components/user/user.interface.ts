@@ -4,22 +4,22 @@ export interface IUser {
   userName: string;
   email: string;
   enabled: boolean;
-  role: string[];
+  role: string;
 }
-export interface IUserDocument extends Document {
-  _id?: Types.ObjectId;
-  userName?: string;
-  email?: string;
-  enabled?: boolean;
-  role?: string[];
-}
-
-export interface IUserCreate {
-  _id?: Types.ObjectId;
+export interface IUserDocument extends Document<any> {
+  _id: Types.ObjectId;
   userName: string;
   email: string;
   enabled: boolean;
-  role: string[];
+  role: string;
+}
+
+export interface IUserCreate {
+  _id: Types.ObjectId;
+  userName: string;
+  email: string;
+  enabled: boolean;
+  role: string;
   password: string;
   confirmPassword: string;
 }

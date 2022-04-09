@@ -19,7 +19,7 @@ export const userCreateDTO = (user: IUserCreate) => {
   const newUser = new UserCreateDTO();
   newUser.userName = user.userName;
   newUser.email = user.email;
-  newUser.role = user.role || ['USER'];
+  newUser.role = user.role || 'USER';
   newUser.password = user.password;
   newUser.confirmPassword = user.confirmPassword;
   newUser.enabled = true;

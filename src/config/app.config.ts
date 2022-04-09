@@ -7,7 +7,7 @@ export const configApp = {
   },
   jwt: {
     secretToken: process.env.SECRET_TOKEN || 'secret',
-    tokenExpire: process.env.TOKEN_EXPIRE || '5m',
-    refreshTokenExpire: process.env.REFRESH_TOKEN_EXPIRE || '10m',
+    tokenExpire: process.env.TOKEN_EXPIRE || '10m',
+    refreshTokenExpire: process.env.REFRESH_TOKEN_EXPIRE || '1m',
   },
 };

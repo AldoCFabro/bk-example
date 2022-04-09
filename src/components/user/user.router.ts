@@ -3,6 +3,10 @@ import { create, list, remove, update } from './user.controller';
 import { validator } from './../../middleware/validation-endpoint';
 import { createUserSchema, updateUserSchema, getAllUserSchema } from './user.joi';
 import { isMongoId } from '../../middleware/isMongoId';
+import { requiereToken } from '../../middleware/requiereToken';
+import { attachUser } from '../../middleware/attachUser';
+import { permission } from '../../middleware/permissions';
+import { ROLE } from '../../helpers/const';
 
 const router = express.Router();
 /**
@@ -61,8 +65,24 @@ const router = express.Router();
  *      201:
  *        description: Usuario creado con éxito
  */
-router.post('/', validator(createUserSchema, 'body'), create);
-router.get('/', validator(getAllUserSchema, 'query'), list);
-router.put('/:_id', isMongoId(), validator(updateUserSchema, 'body'), update);
-router.delete('/:_id', isMongoId(), remove);
+
+router.post(
+  '/',
+  requiereToken(),
+  attachUser(),
+  permission(ROLE.admin),
+  validator(createUserSchema, 'body'),
+  create,
+);
+router.put(
+  '/:_id',
+  isMongoId(),
+  requiereToken(),
+  attachUser(),
+  permission(ROLE.admin),
+  validator(updateUserSchema, 'body'),
+  update,
+);
+router.get('/', requiereToken(), validator(getAllUserSchema, 'query'), attachUser(), list);
+router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(ROLE.admin), remove);
 export default router;

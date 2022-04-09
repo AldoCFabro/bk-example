@@ -6,10 +6,7 @@ export const createUserSchema = Joi.object({
   email: Joi.string().required().email(),
   password: Joi.string().required().min(2).max(8),
   confirmPassword: Joi.string().required().min(2).max(8),
-  role: Joi.array()
-    .items(Joi.string().required().valid('ADMIN', 'USER'))
-    .optional()
-    .default('USER'),
+  role: Joi.string().valid('ADMIN', 'USER').optional().default('USER'),
 });
 
 export const updateUserSchema = Joi.object({

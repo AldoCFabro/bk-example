@@ -4,7 +4,7 @@ export class UserDTO {
   userName?: string;
   email?: string;
   enabled?: boolean;
-  role?: string[];
+  role?: string;
   constructor() {}
 }
 
@@ -12,7 +12,7 @@ export class UserCreateDTO {
   _id?: Types.ObjectId;
   userName?: string;
   email?: string;
-  role?: string[];
+  role?: string;
   password?: string;
   confirmPassword?: string;
   enabled?: boolean;
