@@ -1,7 +1,8 @@
 import express from 'express';
-import { create, getById, list, remove, update } from './user.controller';
+import { create, list, remove, update } from './user.controller';
 import { validator } from './../../middleware/validation-endpoint';
 import { createUserSchema, updateUserSchema, getAllUserSchema } from './user.joi';
+import { isMongoId } from '../../middleware/isMongoId';
 
 const router = express.Router();
 /**
@@ -61,7 +62,7 @@ const router = express.Router();
  *        description: Usuario creado con éxito
  */
 router.post('/', validator(createUserSchema, 'body'), create);
-router.put('/', validator(updateUserSchema, 'body'), update);
 router.get('/', validator(getAllUserSchema, 'query'), list);
-router.get('/:id', getById);
+router.put('/:_id', isMongoId(), validator(updateUserSchema, 'body'), update);
+router.delete('/:_id', isMongoId(), remove);
 export default router;

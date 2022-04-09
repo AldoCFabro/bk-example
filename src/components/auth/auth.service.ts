@@ -1,8 +1,12 @@
 import logger from 'jet-logger';
 import { UserCreateDTO } from '../user/user.dto';
-import { AuthCreatDTO } from './auth.map';
+import { AutDocumentToDTO, AuthCreatDTO } from './auth.map';
 import AuthModel from './auth.model';
 import jwt from 'jsonwebtoken';
+import { configApp } from './../../config/app.config';
+import { LoginDTO } from './auth.dto';
+import { IAuthDocument } from './auth.interface';
+import { FilterQuery } from 'mongoose';
 
 const create = async (newUser: UserCreateDTO): Promise<boolean | unknown> => {
   logger.info(`[auth.service.create()]`);
@@ -18,9 +22,31 @@ const create = async (newUser: UserCreateDTO): Promise<boolean | unknown> => {
     return error;
   }
 };
-const login = async (auth: any) => {};
-const logout = async (auth: any) => {};
+const login = async (auth: LoginDTO) => {
+  const { email, password } = auth;
+  const authDocument = await getByEmail(email);
+  return auth;
+};
 
-const verify = (token: string) => {};
+const logout = async () => {
+  return 'logout';
+};
 
-export default { create };
+const verify = (token: string): boolean => {
+  const secret = configApp.jwt.secretToken;
+  console.log(jwt.verify(token, secret));
+  return true;
+};
+
+const getByEmail = async (email: string = '') => {
+  const query: FilterQuery<IAuthDocument> = {
+    email: { $regex: new RegExp(`^${email}$`, 'i') },
+  };
+  const auth = await AuthModel.findOne(query);
+  if (!auth) {
+    throw 'auth.getByEmail.user-not-found';
+  }
+  return AutDocumentToDTO(auth);
+};
+
+export default { create, login, logout, verify, getByEmail };

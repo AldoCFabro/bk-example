@@ -3,7 +3,15 @@ import { AuthDTO } from './auth.dto';
 import { UserCreateDTO } from '../user/user.dto';
 import { passwordEncrypt } from '../../helpers/password-encrypt';
 
-export const userDocumentToDTO = (autDocument: IAuthDocument) => {
+export const AutDocumentToDTO = (autDocument: IAuthDocument) => {
+  const auth = new AuthDTO();
+  auth._id = autDocument._id;
+  auth.userId = autDocument.userId;
+  auth.email = autDocument.email;
+  auth.password = autDocument.password;
+  return auth;
+};
+export const AutToDTO = (autDocument: IAuthDocument) => {
   const auth = new AuthDTO();
   auth.userId = autDocument._id;
   auth.email = autDocument.email;

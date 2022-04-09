@@ -6,7 +6,7 @@ export const configApp = {
     saltRounds: process.env.SALT_ROUNDS || 10,
   },
   jwt: {
-    secretToken: process.env.SALT_ROUNDS || 'secret',
+    secretToken: process.env.SECRET_TOKEN || 'secret',
     tokenExpire: process.env.TOKEN_EXPIRE || '5m',
     refreshTokenExpire: process.env.REFRESH_TOKEN_EXPIRE || '10m',
   },

@@ -1,10 +1,10 @@
 import { Types, Document } from 'mongoose';
 export interface IUser {
-  _id?: Types.ObjectId;
-  userName?: string;
-  email?: string;
-  enabled?: boolean;
-  role?: string[];
+  _id: Types.ObjectId;
+  userName: string;
+  email: string;
+  enabled: boolean;
+  role: string[];
 }
 export interface IUserDocument extends Document {
   _id?: Types.ObjectId;

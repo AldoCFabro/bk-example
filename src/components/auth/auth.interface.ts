@@ -6,6 +6,7 @@ export interface IAuth {
 }
 
 export interface IAuthDocument extends Document {
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
   email: string;
   password: string;

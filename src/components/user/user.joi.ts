@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import mongoose, { Types } from 'mongoose';
 
 export const createUserSchema = Joi.object({
   userName: Joi.string().required(),
@@ -13,9 +14,6 @@ export const createUserSchema = Joi.object({
 
 export const updateUserSchema = Joi.object({
   userName: Joi.string(),
-  email: Joi.string().email(),
-  enabled: Joi.boolean().optional(),
-  role: Joi.array().items(Joi.string().required().allow('ADMIN', 'USER')),
 });
 
 export const getAllUserSchema = Joi.object({

@@ -2,8 +2,10 @@ import logger from 'jet-logger';
 import userModel from './user.model';
 import { mapUsersDocumentToDTO, userCreateDTO, userDocumentToDTO } from './user.map';
 import authService from './../auth/auth.service';
-import { IUserCreate } from './user.interface';
+import { IUser, IUserCreate, IUserDocument } from './user.interface';
 import { UserDTO } from './user.dto';
+import mongoose, { FilterQuery, QueryOptions } from 'mongoose';
+import autService from './../auth/auth.service';
 
 const create = async (user: IUserCreate): Promise<UserDTO> => {
   logger.info(`[user.service.create()]`);
@@ -11,8 +13,17 @@ const create = async (user: IUserCreate): Promise<UserDTO> => {
   try {
     // User
     const userCreateDto = userCreateDTO(user);
-    // add duplicate user logic
-    // add duplicate email logic
+
+    const { email } = userCreateDto;
+    const isDuplicateEmail = await checkDuplicateEmail(email);
+    if (isDuplicateEmail) throw 'user.create.email-in-use';
+
+    const { userName } = userCreateDto;
+    const isDuplicateUserNAme = await checkDuplicateUserName(userName);
+    if (isDuplicateUserNAme) throw 'user.create.userName-in-use';
+
+    const { password, confirmPassword } = userCreateDto;
+    if (password != confirmPassword) throw 'user.create.user-passwords-are-not-the-same';
 
     const newUser = new userModel(userCreateDto);
     await newUser.save();
@@ -44,12 +55,62 @@ const list = async (limit = 10, skip = 0, sort = '-1'): Promise<UserDTO[]> => {
   }
 };
 
-const getById: any = async (id: any) => {};
+const update = async (user: IUser): Promise<UserDTO> => {
+  const { userName } = user;
+  const userNameExists = await checkDuplicateUserName(userName);
+  if (userNameExists) throw 'user.update.userName-in-use';
+  const userUpdated = await userModel.findOneAndUpdate({ userName }, { new: true });
+  if (!userUpdated) {
+    throw 'user.update.user.not-found';
+  }
+  return userDocumentToDTO(userUpdated);
+};
 
-const update: any = async (data: any) => {};
+const remove = async (_id: any): Promise<boolean> => {
+  const userUpdated = await userModel.findByIdAndUpdate(_id, { enabled: false }, { new: true });
+  if (!userUpdated) {
+    throw 'user.update.user-not-found';
+  }
+  return true;
+};
 
-const remove: any = async (id: any) => {};
+const checkDuplicateUserName = async (userName: string = ''): Promise<boolean> => {
+  let isDuplicate = false;
+  const user = await getByUserName(userName);
+  isDuplicate = !!user;
+  return isDuplicate;
+};
 
-const getByEmail: any = async (email: any) => {};
+const checkDuplicateEmail = async (userName: string = ''): Promise<boolean> => {
+  let isDuplicate = false;
+  const user = await getByEmail(userName);
+  isDuplicate = !!user;
+  return isDuplicate;
+};
 
-export default { list, getById, create, update, remove, getByEmail };
+const getByUserName = async (userName: string): Promise<UserDTO | null> => {
+  let user = null;
+  const query: FilterQuery<IUserDocument> = {
+    userName: { $regex: new RegExp(`^${userName}$`, 'i') },
+  };
+  const userDocument = await userModel.findOne(query);
+  if (userDocument) {
+    user = userDocumentToDTO(userDocument);
+    logger.info(`user found -> _id: ${user._id}, email:${user.email}}`);
+  }
+  return user;
+};
+
+const getByEmail = async (email: string = ''): Promise<UserDTO | null> => {
+  let user = null;
+  const query: FilterQuery<IUserDocument> = {
+    email: { $regex: new RegExp(`^${email}$`, 'i') },
+  };
+  const userDocument = await userModel.findOne(query);
+  if (userDocument) {
+    user = userDocumentToDTO(userDocument);
+  }
+  return user;
+};
+
+export default { list, create, update, remove };
