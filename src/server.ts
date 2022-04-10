@@ -29,6 +29,10 @@ app.use(prefix, BaseRouter);
 
 dbConnection();
 
+/***********************************************************************************
+ *                                  Front-end content
+ **********************************************************************************/
+
 // Set views dir
 const viewsDir = path.join(__dirname, 'views');
 app.set('views', viewsDir);
