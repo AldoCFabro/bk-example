@@ -19,7 +19,7 @@ export const permission = (role: string) => {
     } catch (error: any) {
       logger.err(`[middleware.permission()] -> ${error}`);
       errorResponse(req, res, error, StatusCodes.FORBIDDEN);
-      return error;
+      throw error;
     }
   };
 };

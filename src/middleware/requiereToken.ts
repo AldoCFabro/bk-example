@@ -22,7 +22,7 @@ export const requiereToken = () => {
     } catch (error: any) {
       logger.err(`[middleware.requiereToken()] -> ${error.message}`);
       errorResponse(req, res, 'forbidden', StatusCodes.FORBIDDEN);
-      return error;
+      throw error;
     }
   };
 };

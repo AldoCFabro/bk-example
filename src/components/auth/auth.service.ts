@@ -21,7 +21,7 @@ const create = async (newUser: UserCreateDTO): Promise<boolean | unknown> => {
     return true;
   } catch (error) {
     logger.err(`[auth.service.create()] ->${JSON.stringify(error)}}`);
-    return error;
+    throw error;
   }
 };
 const login = async (auth: LoginDTO) => {
