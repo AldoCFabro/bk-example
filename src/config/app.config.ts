@@ -1,6 +1,6 @@
 export const configApp = {
   api: {
-    port: process.env.API_PORT || 3001,
+    port: process.env.API_PORT || 5000,
   },
   bcrypt: {
     saltRounds: process.env.SALT_ROUNDS || 10,
