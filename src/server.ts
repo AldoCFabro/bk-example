@@ -33,7 +33,7 @@ dbConnection();
  *                                  Front-end content
  **********************************************************************************/
 
-// Set views dir
+/* // Set views dir
 const viewsDir = path.join(__dirname, 'views');
 app.set('views', viewsDir);
 
@@ -44,6 +44,6 @@ app.use(express.static(staticDir));
 // Serve index.html file
 app.get('*', (_: Request, res: Response) => {
   res.sendFile('index.html', { root: viewsDir });
-});
+}); */
 
 export default app;
