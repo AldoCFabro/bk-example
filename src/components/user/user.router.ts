@@ -91,7 +91,7 @@ router.post(
 
 /**
  * @swagger
- * /:
+ * /:_id:
  *  put:
  *    summary: Edita un usuario
  *    tags: [Users]
@@ -118,7 +118,7 @@ router.put(
 
 /**
  * @swagger
- * /:
+ * /:_id:
  *  delete:
  *    summary: Elimina un usuario
  *    tags: [Users]
@@ -139,7 +139,7 @@ router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(RO
  * @swagger
  * /:
  *  get:
- *    summary: Edita un usuario
+ *    summary: Listar usuarios
  *    tags: [Users]
  *    parameters:
  *      - in: query
