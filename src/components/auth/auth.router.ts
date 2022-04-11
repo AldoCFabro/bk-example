@@ -52,13 +52,7 @@ router.post('/login', validator(loginSchema, 'body'), authController.login);
  *  post:
  *    summary: Sign out
  *    tags: [Auth]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            $ref: '#/components/schemas/Login'
+
  *    responses:
  *      200:
  *        description: Salir a la app
