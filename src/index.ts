@@ -3,7 +3,7 @@ import server from './server';
 import { configApp } from './config/app.config';
 
 try {
-  const port = process.env.PORT || process.env.API_PORT || 5000;
+  const port = process.env.PORT || 5000;
   // Start server
   server.listen(port, () => {
     logger.info(`Conexa server running on port ${port}`);

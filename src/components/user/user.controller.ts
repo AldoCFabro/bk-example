@@ -35,8 +35,9 @@ async function list(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
   try {
+    const { _id } = req.params;
     const data = req.body;
-    const userUpdated = await userService.update(data);
+    const userUpdated = await userService.update(_id, data);
     successResponse(req, res, 'update one user', 200, userUpdated);
   } catch (error: any) {
     errorResponse(req, res, error, 400);

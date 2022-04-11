@@ -9,12 +9,12 @@ export const swaggerConfig = {
       contact: {
         name: 'Aldo Fabro',
         email: 'aldocfabro@gmail.com',
-        url: '',
+        url: 'https://github.com/AldoCFabro/conexa',
       },
     },
     servers: [
       {
-        url: `http://localhost:${process.env.API_PORT}/`,
+        url: `http://localhost:${process.env.PORT}/`,
         description: 'localhost',
       },
       {

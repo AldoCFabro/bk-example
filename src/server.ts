@@ -19,7 +19,7 @@ const prefix = `/api/${version}`;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(`${prefix}/doc`, swaggerUI.serve, swaggerUI.setup(swaggerjsDoc(swaggerConfig)));
+app.use(`/`, swaggerUI.serve, swaggerUI.setup(swaggerjsDoc(swaggerConfig)));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

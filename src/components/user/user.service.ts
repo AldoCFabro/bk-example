@@ -54,11 +54,11 @@ const list = async (limit = 10, skip = 0, sort = '-1'): Promise<UserDTO[]> => {
   }
 };
 
-const update = async (user: IUser): Promise<UserDTO> => {
+const update = async (_id: string, user: IUser): Promise<UserDTO> => {
   const { userName } = user;
   const userNameExists = await checkDuplicateUserName(userName);
   if (userNameExists) throw 'user.update.userName-in-use';
-  const userUpdated = await userModel.findOneAndUpdate({ userName }, { new: true });
+  const userUpdated = await userModel.findOneAndUpdate({ _id }, { userName }, { new: true });
   if (!userUpdated) {
     throw 'user.update.user.not-found';
   }

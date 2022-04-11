@@ -13,46 +13,45 @@ const router = express.Router();
  * @swagger
  * components:
  *  schemas:
- *    User:
+ *    Users:
  *      type: object
  *      properties:
- *        firstName:
+ *        userName:
  *          type: string
- *          description: Nombre
- *        lastName:
- *          type: string
- *          description: Apellido
+ *          description: Nombre de usuario
  *        email:
  *          type: string
  *          description: Correo electrónico
  *        password:
  *          type: string
  *          description: Contraseña
+ *        confirmPassword:
+ *          type: string
+ *          description: Confirmar contraseña
  *        rol:
  *          type: string
- *          description: Roles permitidos ADMIN_ROLE , USER_ROLE
+ *          description: Roles permitidos ADMIN , USER
  *        enabled:
  *          type: boolean
- *          description: alta y baja lógica
+ *          description: Alta y baja lógica por defecto se crea en true
  *      required:
- *        - firstName
- *        - lastName
+ *        - userName
  *        - email
  *        - password
- *        - rol
+ *        - confirmPassword
  *      example:
- *         "firstName": "Aldo"
- *         "lastName": "Fabro"
- *         "email": "aldocfabro@gmail.com"
- *         "password": "password"
- *         "rol": "ADMIN_ROLE"
+ *         userName: Orbaf
+ *         email: aldocfabro@gmail.com
+ *         password: soy una contraseña
+ *         confirmPassword: confirmo contraseña
+ *         rol: ADMIN
  */
 
 /**
  * @swagger
- * /api/users:
+ * /:
  *  post:
- *    summary: Alta de usuario
+ *    summary: Crear un usuario
  *    tags: [Users]
  *    requestBody:
  *      required: true
@@ -60,12 +59,11 @@ const router = express.Router();
  *        application/json:
  *          schema:
  *            type: object
- *            $ref: '#/components/schemas/User'
+ *            $ref: '#/components/schemas/Users'
  *    responses:
  *      201:
- *        description: Usuario creado con éxito
+ *        description: user created
  */
-
 router.post(
   '/',
   requiereToken(),
@@ -74,6 +72,40 @@ router.post(
   validator(createUserSchema, 'body'),
   create,
 );
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    UsersEdit:
+ *      type: object
+ *      properties:
+ *        userName:
+ *          type: string
+ *          description: Nombre de usuario
+ *      required:
+ *        - userName
+ *      example:
+ *         userName: Orbaf
+ */
+
+/**
+ * @swagger
+ * /:
+ *  put:
+ *    summary: Edita un usuario
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/UsersEdit'
+ *    responses:
+ *      200:
+ *        description: update one user
+ */
 router.put(
   '/:_id',
   isMongoId(),
@@ -83,6 +115,55 @@ router.put(
   validator(updateUserSchema, 'body'),
   update,
 );
-router.get('/', requiereToken(), validator(getAllUserSchema, 'query'), attachUser(), list);
+
+/**
+ * @swagger
+ * /:
+ *  delete:
+ *    summary: Elimina un usuario
+ *    tags: [Users]
+ *    parameters:
+ *      - in: params
+ *        name: _id
+ *        schema:
+ *          type: mongoId
+ *        required: true
+ *        description: Es el id del usuario que se quiere actualizar
+ *    responses:
+ *      200:
+ *        description: user created
+ */
 router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(ROLE.admin), remove);
+
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: Edita un usuario
+ *    tags: [Users]
+ *    parameters:
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        required: false
+ *        description:
+ *      - in: query
+ *        name: skip
+ *        schema:
+ *          type: integer
+ *        required: false
+ *        description:
+ *      - in: query
+ *        name: sort
+ *        schema:
+ *          type: integer
+ *        required: false
+ *        description: puede ser 1 0 -1
+ *    responses:
+ *      200:
+ *        description: user created
+ */
+router.get('/', requiereToken(), validator(getAllUserSchema, 'query'), attachUser(), list);
+
 export default router;
