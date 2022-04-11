@@ -13,9 +13,9 @@ const router = Router();
  *    Login:
  *      type: object
  *      properties:
- *        userName:
+ *        email:
  *          type: string
- *          description: Nombre de usuario
+ *          description: correo electrónico
  *        password:
  *          type: string
  *          description: Contraseña
