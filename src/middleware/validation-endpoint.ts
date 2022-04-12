@@ -12,7 +12,6 @@ export const validator = (schema: Schema, property: string) => {
     } catch (error: any) {
       logger.err(`[middleware.validator()] -> ${JSON.stringify(error)}`);
       errorResponse(req, res, error.message, StatusCodes.BAD_REQUEST);
-      throw error;
     }
   };
 };

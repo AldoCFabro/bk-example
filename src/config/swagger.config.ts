@@ -14,19 +14,18 @@ export const swaggerConfig = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.PORT}/`,
+        url: `http://localhost:${process.env.PORT}/api/v1/`,
         description: 'localhost',
       },
       {
-        url: 'https://conexa-app.herokuapp.com/',
+        url: 'https://www.orbaf.com.ar/api/v1/',
         description: 'Heroku',
       },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'apiKey',
-          name: 'x-token',
+          type: 'http',
           scheme: 'bearer',
           in: 'header',
         },

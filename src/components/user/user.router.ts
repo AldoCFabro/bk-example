@@ -40,16 +40,17 @@ const router = express.Router();
  *        - password
  *        - confirmPassword
  *      example:
- *         userName: Orbaf
- *         email: aldocfabro@gmail.com
- *         password: soy una contraseña
- *         confirmPassword: confirmo contraseña
- *         rol: ADMIN
+ *         userName: conexa
+ *         email: conexa@conexa.com
+ *         password: conexa
+ *         confirmPassword: conexa
+ *         role: ADMIN
+ * 
  */
 
 /**
  * @swagger
- * /:
+ * /users:
  *  post:
  *    summary: Crear un usuario
  *    tags: [Users]
@@ -91,10 +92,17 @@ router.post(
 
 /**
  * @swagger
- * /:_id:
+ * /users/{_id}:
  *  put:
  *    summary: Edita un usuario
  *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: _id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Es el id del usuario que se quiere actualizar
  *    requestBody:
  *      required: true
  *      content:
@@ -118,26 +126,26 @@ router.put(
 
 /**
  * @swagger
- * /:_id:
+ * /users/{_id}:
  *  delete:
  *    summary: Elimina un usuario
  *    tags: [Users]
  *    parameters:
- *      - in: params
+ *      - in: path
  *        name: _id
  *        schema:
- *          type: mongoId
+ *          type: string
  *        required: true
- *        description: Es el id del usuario que se quiere actualizar
+ *        description: Es el id del usuario que se quiere eliminar
  *    responses:
  *      200:
- *        description: user created
+ *        description: user deleted
  */
 router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(ROLE.admin), remove);
 
 /**
  * @swagger
- * /:
+ * /users:
  *  get:
  *    summary: Listar usuarios
  *    tags: [Users]

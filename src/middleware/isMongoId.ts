@@ -18,7 +18,6 @@ export const isMongoId = () => {
     } catch (error: any) {
       logger.err(`[middleware.isMongoId()] -> ${error.message}`);
       errorResponse(req, res, error.message, StatusCodes.BAD_REQUEST);
-      throw error;
     }
   };
 };

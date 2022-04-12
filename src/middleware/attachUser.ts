@@ -34,7 +34,6 @@ export const attachUser = () => {
     } catch (error: any) {
       logger.err(`[middleware.attachUser()] -> ${error}`);
       errorResponse(req, res, error.message, StatusCodes.BAD_REQUEST);
-      throw error;
     }
   };
 };

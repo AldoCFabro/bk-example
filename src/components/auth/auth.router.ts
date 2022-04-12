@@ -20,16 +20,16 @@ const router = Router();
  *          type: string
  *          description: Contraseña
  *      required:
- *        - userName
+ *        - email
  *        - password
  *      example:
- *         userName: Orbaf
- *         password: admin123
+ *         email: conexa@conexa.com
+ *         password: conexa
  */
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *  post:
  *    summary: Sign in
  *    tags: [Auth]
@@ -48,7 +48,7 @@ router.post('/login', validator(loginSchema, 'body'), authController.login);
 
 /**
  * @swagger
- * /logout:
+ * /auth/logout:
  *  post:
  *    summary: Sign out
  *    tags: [Auth]

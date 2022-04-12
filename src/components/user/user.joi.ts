@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import mongoose, { Types } from 'mongoose';
 
 export const createUserSchema = Joi.object({
   userName: Joi.string().required(),
