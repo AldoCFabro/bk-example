@@ -84,17 +84,20 @@ const checkDuplicateUserName = async (userName: string = '',_id: string = ''): P
 
   const query: FilterQuery<IUserDocument> = {
     userName: { $regex: new RegExp(`^${userName}$`, 'i') },
-    _id: { $ne: _id },
+    //_id: { $ne: _id },
   };
+  if(_id){
+    query._id =  { $ne: _id }
+  }
   
   const userDocument = await userModel.findOne(query);
   isDuplicate = !!userDocument;
   return isDuplicate;
 };
 
-const checkDuplicateEmail = async (userName: string = ''): Promise<boolean> => {
+const checkDuplicateEmail = async (email: string = ''): Promise<boolean> => {
   let isDuplicate = false;
-  const user = await getByEmail(userName);
+  const user = await getByEmail(email);
   isDuplicate = !!user;
   return isDuplicate;
 };
