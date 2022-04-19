@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { successResponse, errorResponse } from '../../network/response';
-import authService from './auth.service';
 import StatusCodes from 'http-status-codes';
+import logger from 'jet-logger';
+import authService from './auth.service';
 
 async function login(req: Request, res: Response) {
   try {
@@ -9,7 +10,8 @@ async function login(req: Request, res: Response) {
     const userLogged = await authService.login(data);
     successResponse(req, res, 'login successfully', 200, userLogged);
   } catch (error: any) {
-    errorResponse(req, res, error, 400);
+    logger.err(`[post.service.get()] -> ${error}`);
+    errorResponse(req, res, error, StatusCodes.BAD_REQUEST);
   }
 }
 
@@ -23,9 +25,8 @@ async function logout(req: Request, res: Response) {
 }
 async function verify(req: Request, res: Response) {
   try {
-    const a = req.body.token;
     const { token = '' } = req.body;
-    await authService.verify(a);
+    await authService.verify(token);
     successResponse(req, res, 'verify successfully', 200);
   } catch (error: any) {
     errorResponse(req, res, error.message, 404, error);

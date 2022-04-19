@@ -19,7 +19,10 @@ const create = async (user: IUserCreate): Promise<UserDTO> => {
 
     const { userName } = userCreateDto;
     const isDuplicateUserNAme = await checkDuplicateUserName(userName);
-    if (isDuplicateUserNAme) throw 'user.create.userName-in-use';
+    if (isDuplicateUserNAme) {
+      logger.err(`[user.service.create()] -> user.create.userName-in-use`);
+      throw 'user.create.userName-in-use';
+    }
 
     const { password, confirmPassword } = userCreateDto;
     if (password != confirmPassword) throw 'user.create.user-passwords-are-not-the-same';
@@ -56,8 +59,11 @@ const list = async (limit = 10, skip = 0, sort = '-1'): Promise<UserDTO[]> => {
 
 const update = async (_id: string, user: IUser): Promise<UserDTO> => {
   const { userName } = user;
-  const userNameExists = await checkDuplicateUserName(userName);
-  if (userNameExists) throw 'user.update.userName-in-use';
+  const userNameExists = await checkDuplicateUserName(userName,_id);
+  if (userNameExists) {
+    logger.err(`[user.service.create()] -> user.create.userName-in-use`);
+    throw 'user.update.userName-in-use';
+  }
   const userUpdated = await userModel.findOneAndUpdate({ _id }, { userName }, { new: true });
   if (!userUpdated) {
     throw 'user.update.user.not-found';
@@ -73,10 +79,16 @@ const remove = async (_id: any): Promise<boolean> => {
   return true;
 };
 
-const checkDuplicateUserName = async (userName: string = ''): Promise<boolean> => {
+const checkDuplicateUserName = async (userName: string = '',_id: string = ''): Promise<boolean> => {
   let isDuplicate = false;
-  const user = await getByUserName(userName);
-  isDuplicate = !!user;
+
+  const query: FilterQuery<IUserDocument> = {
+    userName: { $regex: new RegExp(`^${userName}$`, 'i') },
+    _id: { $ne: _id },
+  };
+  
+  const userDocument = await userModel.findOne(query);
+  isDuplicate = !!userDocument;
   return isDuplicate;
 };
 
@@ -92,6 +104,7 @@ const getByUserName = async (userName: string): Promise<UserDTO | null> => {
   const query: FilterQuery<IUserDocument> = {
     userName: { $regex: new RegExp(`^${userName}$`, 'i') },
   };
+
   const userDocument = await userModel.findOne(query);
   if (userDocument) {
     user = userDocumentToDTO(userDocument);

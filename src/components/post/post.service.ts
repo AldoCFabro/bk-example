@@ -1,6 +1,5 @@
 import logger from 'jet-logger';
 import axios from 'axios';
-import { configApp } from '../../config/app.config';
 import { isNUmber } from '../../utils/numberUtils';
 
 //  photos: process.env.URL_PHOTOS,

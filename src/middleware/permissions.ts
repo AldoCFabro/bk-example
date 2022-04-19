@@ -4,7 +4,7 @@ import logger from 'jet-logger';
 import StatusCodes from 'http-status-codes';
 import { IUser } from '../components/user/user.interface';
 
-export const permission = (role: string) => {
+export const permission = (role: string, action:string[] =[]) => {
   return async (req: any, res: Response, next: NextFunction) => {
     try {
       const userProfile: IUser = req.userProfile;

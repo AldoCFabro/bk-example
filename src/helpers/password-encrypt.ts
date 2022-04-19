@@ -1,8 +1,13 @@
-import { configApp } from './../config/app.config';
+
 import bcrypt from 'bcrypt';
+import logger from 'jet-logger';
 
 export const passwordEncrypt = (password = '') => {
-  const saltRounds = parseInt(configApp.bcrypt.saltRounds.toString(), 10);
+  if(!process.env.SECRET_TOKEN){
+    logger.err(`[helpers.password-encrypt.passwordEncrypt()] -> SECRET_TOKEN is required`);
+    throw 'unexpected error'
+  }
+  const saltRounds = parseInt(process.env.SECRET_TOKEN.toString(), 10);
   const salt = bcrypt.genSaltSync(saltRounds);
   return bcrypt.hashSync(password, salt);
 };

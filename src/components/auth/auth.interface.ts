@@ -11,3 +11,8 @@ export interface IAuthDocument extends Document {
   email: string;
   password: string;
 }
+
+export interface IUserPayloads extends Document {
+  _id: Types.ObjectId;
+  email: string;
+}

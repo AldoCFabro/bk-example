@@ -9,7 +9,7 @@ async function create(req: Request, res: Response) {
     const userCreated = await userService.create(data);
     successResponse(req, res, 'user created', StatusCodes.CREATED, { user: userCreated });
   } catch (error: any) {
-    errorResponse(req, res, error);
+    errorResponse(req, res, error, StatusCodes.NOT_ACCEPTABLE);
   }
 }
 
@@ -29,7 +29,7 @@ async function list(req: Request, res: Response) {
     };
     successResponse(req, res, 'get all users', StatusCodes.OK, response);
   } catch (error: any) {
-    errorResponse(req, res, 'internal server error', StatusCodes.INTERNAL_SERVER_ERROR, error);
+    errorResponse(req, res, 'internal server error',  StatusCodes.NOT_ACCEPTABLE, error);
   }
 }
 
@@ -40,7 +40,7 @@ async function update(req: Request, res: Response) {
     const userUpdated = await userService.update(_id, data);
     successResponse(req, res, 'update one user', 200, userUpdated);
   } catch (error: any) {
-    errorResponse(req, res, error, 400);
+    errorResponse(req, res, error,  StatusCodes.NOT_ACCEPTABLE);
   }
 }
 
@@ -50,7 +50,7 @@ async function remove(req: Request, res: Response) {
     await userService.remove(_id);
     successResponse(req, res, 'one user removed', 200);
   } catch (error: any) {
-    errorResponse(req, res, error.message, 404, error);
+    errorResponse(req, res, error.message,  StatusCodes.NOT_ACCEPTABLE, error);
   }
 }
 export { list, create, update, remove };

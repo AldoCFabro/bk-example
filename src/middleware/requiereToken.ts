@@ -2,8 +2,6 @@ import { Response, NextFunction } from 'express';
 import { errorResponse } from './../network/response';
 import logger from 'jet-logger';
 import StatusCodes from 'http-status-codes';
-import mongoose from 'mongoose';
-import { configApp } from './../config/app.config';
 import jwt from 'jsonwebtoken';
 
 export const requiereToken = () => {
@@ -16,7 +14,11 @@ export const requiereToken = () => {
       if (typeof tokenBearer !== 'undefined' && typeof tokenBearer === 'string') {
         token = tokenBearer.split(' ')[1];
       }
-      jwt.verify(token, configApp.jwt.secretToken);
+      if(!process.env.SECRET_TOKEN){
+        logger.err(`[helpers.password-encrypt.passwordEncrypt()] -> SECRET_TOKEN is required`);
+        throw 'unexpected error'
+      }
+      jwt.verify(token, process.env.SECRET_TOKEN.toString());
       req.token = token;
       next();
     } catch (error: any) {

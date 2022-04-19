@@ -1,6 +1,5 @@
 import logger from 'jet-logger';
 import server from './server';
-import { configApp } from './config/app.config';
 
 try {
   const port = process.env.PORT || 5000;

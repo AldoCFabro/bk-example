@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import { UserCreateDTO } from '../user/user.dto';
 import { AutDocumentToDTO, AuthCreatDTO } from './auth.map';
 import AuthModel from './auth.model';
-import { configApp } from './../../config/app.config';
 import { LoginDTO } from './auth.dto';
 import { IAuthDocument } from './auth.interface';
 import userServices from './../user/user.service';
@@ -30,12 +29,12 @@ const login = async (auth: LoginDTO) => {
 
   if (!authDB || !authDB.password) {
     logger.err(`[auth.service.login()] -> the user does not exist or does not contain a password`);
-    throw 'auth.service-user-or-password-incorrect';
+    throw 'auth.service.user-or-password-incorrect';
   }
   const passwordSome = bcrypt.compareSync(inputPassword, authDB.password);
   if (!passwordSome) {
     logger.err(`[auth.service.login()] -> Invalid password`);
-    throw 'auth.service-user-or-password-incorrect';
+    throw 'auth.service.user-or-password-incorrect';
   }
 
   const userId = authDB.userId?.toString() || '';
@@ -43,16 +42,13 @@ const login = async (auth: LoginDTO) => {
   const userProfile = await userServices.getProfileUserById(userId);
   if (!userProfile) {
     logger.err(`[auth.service.login()] -> the user does not have a profile`);
-    throw 'auth.service-user-authentication-error';
+    throw 'auth.service.user-authentication-error';
   }
 
   const { _id, password, ...payload } = authDB;
+const {token,refreshToken} = generateTokenAndRefreshToken(payload);
 
-  const token = jwt.sign(payload, configApp.jwt.secretToken, {
-    expiresIn: configApp.jwt.tokenExpire,
-  });
-  console.log('{ expiresIn: config.jwt.tokenExpire }:', { expiresIn: configApp.jwt.tokenExpire });
-  return { ...userProfile, token };
+  return { ...userProfile, token,refreshToken };
 };
 
 const logout = async () => {
@@ -60,9 +56,31 @@ const logout = async () => {
 };
 
 const verify = (token: string) => {
-  const secret = configApp.jwt.secretToken;
+  if(!process.env.SECRET_TOKEN ){
+    logger.err(`[auth.service.login()] -> SECRET_TOKEN is required`);
+    throw 'auth.service.login.error'
+  }
+  const secret = process.env.SECRET_TOKEN;
   return jwt.verify(token, secret);
 };
+
+const generateTokenAndRefreshToken = (payload: any): { token: string; refreshToken: string } =>{
+  if(!process.env.SECRET_TOKEN ){
+    logger.err(`[auth.service.login()] -> SECRET_TOKEN is required`);
+    throw 'auth.service.login.error'
+  }
+
+  const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
+    expiresIn: process.env.TOKEN_EXPIRE,
+  });
+
+  const refreshToken = jwt.sign(payload, process.env.SECRET_TOKEN, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRE,
+  });
+
+  logger.info(`generated token and refresh token`);
+  return { token, refreshToken };
+}
 
 const getByEmail = async (email: string = '') => {
   let userAuth = null;
@@ -77,4 +95,4 @@ const getByEmail = async (email: string = '') => {
   return userAuth;
 };
 
-export default { create, login, logout, verify, getByEmail };
+export default { create, login,verify, logout, getByEmail };
