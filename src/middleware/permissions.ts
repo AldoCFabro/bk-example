@@ -13,7 +13,7 @@ export const permission = (role: string, action:string[] =[]) => {
       }
       const { role: roleUser } = userProfile;
       if (roleUser !== role) {
-        throw 'forbidden FORBIDDEN';
+        throw 'forbidden';
       }
       next();
     } catch (error: any) {
