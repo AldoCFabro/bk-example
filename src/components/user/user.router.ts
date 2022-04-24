@@ -7,6 +7,7 @@ import { requiereToken } from '../../middleware/requiereToken';
 import { attachUser } from '../../middleware/attachUser';
 import { permission } from '../../middleware/permissions';
 import { ROLE } from '../../helpers/const';
+import { deleteNotAllowed } from '../../middleware/superUserPermissions';
 
 const router = express.Router();
 /**
@@ -64,6 +65,11 @@ const router = express.Router();
  *    responses:
  *      201:
  *        description: user created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              $ref: '#/components/schemas/Users'
  */
 router.post(
   '/',
@@ -113,6 +119,11 @@ router.post(
  *    responses:
  *      200:
  *        description: update one user
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              $ref: '#/components/schemas/Users'
  */
 router.put(
   '/:_id',
@@ -141,7 +152,7 @@ router.put(
  *      200:
  *        description: user deleted
  */
-router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(ROLE.admin), remove);
+router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(ROLE.admin), deleteNotAllowed(), remove);
 
 /**
  * @swagger
@@ -170,7 +181,13 @@ router.delete('/:_id', isMongoId(), requiereToken(), attachUser(), permission(RO
  *        description: puede ser 1 0 -1
  *    responses:
  *      200:
- *        description: user created
+ *        description: get all users
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Users'
  */
 router.get('/', requiereToken(), validator(getAllUserSchema, 'query'), attachUser(), list);
 

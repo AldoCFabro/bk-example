@@ -11,7 +11,7 @@ async function login(req: Request, res: Response) {
     successResponse(req, res, 'login successfully', 200, userLogged);
   } catch (error: any) {
     logger.err(`[post.service.get()] -> ${error}`);
-    errorResponse(req, res, error, StatusCodes.BAD_REQUEST);
+    errorResponse(req, res, error, StatusCodes.NOT_ACCEPTABLE);
   }
 }
 

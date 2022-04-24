@@ -44,11 +44,15 @@ const login = async (auth: LoginDTO) => {
     logger.err(`[auth.service.login()] -> the user does not have a profile`);
     throw 'auth.service.user-authentication-error';
   }
+  if (!userProfile.enabled) {
+    logger.err(`[auth.service.login()] -> unsubscribed user`);
+    throw 'auth.service.user-or-password-incorrect';
+  }
 
   const { _id, password, ...payload } = authDB;
-const {token,refreshToken} = generateTokenAndRefreshToken(payload);
+  const { token, refreshToken } = generateTokenAndRefreshToken(payload);
 
-  return { ...userProfile, token,refreshToken };
+  return { ...userProfile, token, refreshToken };
 };
 
 const logout = async () => {
@@ -56,18 +60,18 @@ const logout = async () => {
 };
 
 const verify = (token: string) => {
-  if(!process.env.SECRET_TOKEN ){
+  if (!process.env.SECRET_TOKEN) {
     logger.err(`[auth.service.login()] -> SECRET_TOKEN is required`);
-    throw 'auth.service.login.error'
+    throw 'auth.service.login.error';
   }
   const secret = process.env.SECRET_TOKEN;
   return jwt.verify(token, secret);
 };
 
-const generateTokenAndRefreshToken = (payload: any): { token: string; refreshToken: string } =>{
-  if(!process.env.SECRET_TOKEN ){
+const generateTokenAndRefreshToken = (payload: any): { token: string; refreshToken: string } => {
+  if (!process.env.SECRET_TOKEN) {
     logger.err(`[auth.service.login()] -> SECRET_TOKEN is required`);
-    throw 'auth.service.login.error'
+    throw 'auth.service.login.error';
   }
 
   const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
@@ -80,7 +84,7 @@ const generateTokenAndRefreshToken = (payload: any): { token: string; refreshTok
 
   logger.info(`generated token and refresh token`);
   return { token, refreshToken };
-}
+};
 
 const getByEmail = async (email: string = '') => {
   let userAuth = null;
@@ -95,4 +99,4 @@ const getByEmail = async (email: string = '') => {
   return userAuth;
 };
 
-export default { create, login,verify, logout, getByEmail };
+export default { create, login, verify, logout, getByEmail };

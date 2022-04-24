@@ -115,6 +115,19 @@ const getByUserName = async (userName: string): Promise<UserDTO | null> => {
   }
   return user;
 };
+const getById = async (_id: string): Promise<UserDTO | null> => {
+  let user = null;
+  const query: FilterQuery<IUserDocument> = {
+   _id
+  };
+
+  const userDocument = await userModel.findOne(query);
+  if (userDocument) {
+    user = userDocumentToDTO(userDocument);
+    logger.info(`user found -> _id: ${user._id}, email:${user.email}}`);
+  }
+  return user;
+};
 
 const getByEmail = async (email: string = ''): Promise<UserDTO | null> => {
   let user = null;
@@ -137,4 +150,4 @@ const getProfileUserById = async (_id: string): Promise<UserDTO | null> => {
   return profile;
 };
 
-export default { list, create, update, remove, getProfileUserById };
+export default { list, create, update, remove, getProfileUserById,getById };
